@@ -1,5 +1,7 @@
-from random import randint
 import sys
+import csv
+from math import log
+from random import randint
 
 def random_list(num):
     return [randint(0,num-1) for _ in range(num)]
@@ -11,54 +13,69 @@ def mostly_sorted(num):
     return mostly_sorted_list
 
 def bubble_sort(rand_list):
+    work = 0
     sorted = False
     while not sorted:
         sorted = True
         for i in range(len(rand_list)-1):
+            work += 1
             if rand_list[i] > rand_list[i+1]:
                 sorted = False
+                work += 1
                 (rand_list[i],rand_list[i+1]) = (rand_list[i+1],rand_list[i])
-    return rand_list
+    return work
 
 def shaker_sort(rand_list):
+    work = 0
     sorted = False
     right_sorts = 0
     left_sorts = 0
     while not sorted:
         sorted = True
         for i in range(len(rand_list)-1):
+            work += 1
             if rand_list[i] > rand_list[i+1]:
                 sorted = False
+                work += 1
                 (rand_list[i],rand_list[i+1]) = (rand_list[i+1],rand_list[i])
         right_sorts += 1
         if sorted:
              break
         for j in range((len(rand_list)-2)-right_sorts, left_sorts-1,-1):
+             work += 1
              if rand_list[j] > rand_list[j+1]:
                 sorted = False
+                work += 1
                 (rand_list[j],rand_list[j+1]) = (rand_list[j+1],rand_list[j])
         left_sorts += 1
-    return rand_list
+    return work
 
 def counting_sort(rand_list):
+    work = len(rand_list)
     counter = [0] * len(rand_list)
     for i in range(len(rand_list)):
+        work += 1
         counter[rand_list[i]] += 1
     replacement_index = 0
     for index, value in enumerate(counter):
         while value:
             #realized after submission that a for loop here is more efficent
+            work += 1
             rand_list[replacement_index] = index
             replacement_index += 1
             value -= 1
-    return rand_list
+    return work
 
 def merge_sort(rand_list):
+    work = 0
     if len(rand_list) == 1:
-        return rand_list
+        return work
     else:
-        left = merge_sort(rand_list[:(len(rand_list)//2)])
-        right = merge_sort(rand_list[(len(rand_list)//2):])
+        left = rand_list[:(len(rand_list)//2)]
+        right = rand_list[(len(rand_list)//2):]
+        work_left = merge_sort(left)
+        work_right = merge_sort(right)
+        work += (work_left + work_right)
         i = 0
         j = 0
         k = 0
@@ -70,30 +87,37 @@ def merge_sort(rand_list):
                 rand_list[i] = right[k]
                 k += 1
             i += 1
+            work += 1
         while j < len(left):
             rand_list[i] = left[j]
             j += 1
             i += 1
+            work += 1
         while k < len(right):
             rand_list[i] = right[k]
             k += 1
             i += 1
-        return rand_list
+            work += 1
+        return work
 
 def quick_sort(rand_list, mod = False, START = 0, STOP = -1):
+    work = 0
     #Bart does the partion then move swap the pivot method
     if STOP == -1:
         STOP = len(rand_list)-1
     if START == STOP:
-        return
+        return work
     if mod:
+        work += 1
         (rand_list[START], rand_list[(STOP-START+1)//2+START]) = (rand_list[(STOP-START+1)//2+START], rand_list[START])
         #just swaps middle index to first index for pivot
     low = 0
     high = 0
     #starts at index 1, bc index 0 is pivot
     for i in range(1,STOP-START+1):
+        work += 1
         if rand_list[START + i] <= rand_list[START]:
+            work += 1
             (rand_list[START + i], rand_list[START + 1 + low]) = (rand_list[START + 1 + low], rand_list[START + i])
             low += 1
             #swaps the index we are currently looking at with the next position 
@@ -101,81 +125,43 @@ def quick_sort(rand_list, mod = False, START = 0, STOP = -1):
         else:
             high += 1
             #no need to swap just increase amount of known highs for recursive call later
+    work += 1
     (rand_list[START], rand_list[START + low]) = (rand_list[START + low], rand_list[START])
     #swap pivot with the right most low
     if low:
-        quick_sort(rand_list, mod, START, START + low - 1)
+        work_low = quick_sort(rand_list, mod, START, START + low - 1)
+        work += work_low
     if high:
-        quick_sort(rand_list, mod, START + low + 1, STOP)
-    return
+        work_high = quick_sort(rand_list, mod, START + low + 1, STOP)
+        work += work_high
+    return work
 
 def moded_quick_sort(rand_list):
     return quick_sort(rand_list, True)
 
 def main():
-    rand_list = random_list(10)
-    sorted_list = (rand_list.copy())
-    sorted_list.sort()
-    sorted_bubble = bubble_sort(rand_list.copy())
-    sorted_shaker = shaker_sort(rand_list.copy())
-    sorted_counting = counting_sort(rand_list.copy())
-    sorted_merge = merge_sort(rand_list.copy())
-    sorted_quick = rand_list.copy()
-    quick_sort(sorted_quick)
-    sorted_mod = rand_list.copy()
-    moded_quick_sort(sorted_mod)
-    print("Original list:\n"  + str(rand_list))
-    if sorted_list != sorted_bubble:
-        print("Error on Bubble Sort")
-    else:
-        print("Success on Bubble Sort!\n" + str(sorted_bubble))
-    if sorted_list != sorted_shaker:
-        print("Error on Shaker Sort")
-    else:
-        print("Success on Shaker Sort!\n" + str(sorted_shaker))
-    if sorted_list != sorted_counting:
-        print("Error on Counting Sort")
-    else:
-        print("Success on Counting Sort!\n" + str(sorted_counting))
-    if sorted_list != sorted_merge:
-            print("Error on Merge Sort")
-    else:
-        print("Success on Merge Sort!\n" + str(sorted_merge))
-    if sorted_list != sorted_quick:
-            print("Error on Quick Sort")
-    else:
-        print("Success on Quick Sort!\n" + str(sorted_quick))
-    if sorted_list != sorted_mod:
-            print("Error on Moded Quick Sort")
-    else:
-        print("Success on Moded Quick Sort!\n" + str(sorted_mod))
-    '''
-    swaping/moving data and comparing data is work
-    
-    sys.recursionlimit(5000)
+    sys.setrecursionlimit(5000)
+    sorts = [bubble_sort, shaker_sort, counting_sort, merge_sort, quick_sort, moded_quick_sort]
+    sort_types = [random_list, mostly_sorted]
+    for sort_type in sort_types:
+        data = [
+                ["Power", "Bubble", "Shaker", "Counting", "Merge", "Quick", "M_Quick"]
+            ]
+        for power in range(3,13):
+            size = 2 ** power
+            row = [power]
+            for sort in sorts:
+                a = sort_type(size)
+                work = sort(a)
+                work = log(work, 2)
+                work = round(work, 2)
+                row.append(work)
+            data.append(row)
+        print(data)
 
-    sorts = [functions]
-    for s in range(3,13):
-        size = s ** 2
-        print(s, end = "")
-        for value in sorts:
-            a = randlist(size)
-            work = vlaue(a)
-            work = log(work,2)
-            print(work, end = "")
-        print()
-        
-
-    make functions sort in place roather than returning the list. then do return work
-
-    for counting
-    len a work added at each step will be 3n at the end
-
-    merge
-    spliting in half is len a work
-
-
-    '''
+        with open(sort_type.__name__+".csv", "w", newline="") as file:
+            writer = csv.writer(file)
+            writer.writerows(data)
     
 if __name__ == '__main__':
     main()

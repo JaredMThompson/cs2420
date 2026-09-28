@@ -1,14 +1,21 @@
+from time import time
 from bag import bag
 from student import student
 
 def main():
     b = bag()
-    with open ("FakeNames.txt", "r") as file:
+    t1 = time()
+    with open ("Bag/FakeNames.txt", "r") as file:
         for line in file:
             s = student(line)
             error = b.insert(s)
-            if not error:
+            if error is False:
                 print("Error item already in bag. Cause: " + s.first + " " + s.last)
+    t2 = time()
+    execution = t2-t1
+    print(f"Inserting took {execution:.2f} seconds")
+    print(f"The size of the bag is{b.size()} items")
+    
     '''
     inserting
     open fakenames.txt

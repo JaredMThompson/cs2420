@@ -6,8 +6,9 @@ class bag():
     def insert(self, data):
         exists = self.exists(data)
         if exists is False:
-            return False
-        self.items.append(data)
+            self.items.append(data)
+            return
+        return False
 
     def delete(self, data):
         exists = self.exists(data)

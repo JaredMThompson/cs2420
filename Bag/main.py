@@ -1,8 +1,14 @@
-import bag
-import student
+from bag import bag
+from student import student
 
 def main():
-    b = Bag.Bag()
+    b = bag()
+    with open ("FakeNames.txt", "r") as file:
+        for line in file:
+            s = student(line)
+            error = b.insert(s)
+            if not error:
+                print("Error item already in bag. Cause: " + s.first + " " + s.last)
     '''
     inserting
     open fakenames.txt

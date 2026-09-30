@@ -7,7 +7,7 @@ def main():
 
     #Inserting
     t1 = time()
-    with open ("Bag/FakeNames.txt", "r") as file:
+    with open ("FakeNames.txt", "r") as file:
         for line in file:
             student_info = line.split()
             s = student(student_info[0], student_info[1], student_info[2], student_info[3], student_info[4])
@@ -32,7 +32,7 @@ def main():
 
     #Deletion
     t1 = time()
-    with open ("Bag/DeleteNames.txt", "r") as file:
+    with open ("DeleteNames.txt", "r") as file:
         for line in file:
             ssn = line.strip()
             temp = student("", "", ssn, "", "")
@@ -48,7 +48,7 @@ def main():
     t1 = time()
     total_age = 0
     students_retrieved = 0
-    with open ("Bag/RetrieveNames.txt", "r") as file:
+    with open ("RetrieveNames.txt", "r") as file:
         for line in file:
             ssn = line.strip()
             temp = student("", "", ssn, "", "")

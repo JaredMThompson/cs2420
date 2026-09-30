@@ -11,8 +11,8 @@ def main():
         for line in file:
             student_info = line.split()
             s = student(student_info[0], student_info[1], student_info[2], student_info[3], student_info[4])
-            error = b.insert(s)
-            if error is False:
+            success = b.insert(s)
+            if success is False:
                 print(f"Error: Item already in bag.\nCause: {s.first} {s.last}\nSSN: {s.ssn}\n")
     t2 = time()
     execution = t2-t1
@@ -35,9 +35,9 @@ def main():
     with open ("Bag/DeleteNames.txt", "r") as file:
         for line in file:
             ssn = line.strip()
-            s2 = student("", "", ssn, "", "")
-            error = b.delete(s2)
-            if error is False:
+            temp = student("", "", ssn, "", "")
+            success = b.delete(temp)
+            if success is False:
                 print(f"Error: Item not in bag.\nCause: {ssn}\n")
     t2 = time()
     execution = t2-t1
@@ -45,36 +45,24 @@ def main():
     print(f"The size of the bag is {b.size()} items.\n")
 
     #Retrival
-
-
-    '''
-    inserting
-    open fakenames.txt
-        read each line make a student with info from line
-            put in bag or print error
-    print time
-    print size
-
-    traverse/iterate
-
-    for s in b:
-        print(s)
-        this will call iter for the bag class
-    do this to find and pring average age
-
-    delete
-
-    with open delete names this is a txt file that has a list of what to be deleted i think
+    t1 = time()
+    total_age = 0
+    students_retrieved = 0
+    with open ("Bag/RetrieveNames.txt", "r") as file:
         for line in file:
             ssn = line.strip()
-            s2 = student.student("",ssn,"","")
-            ok = b.delete(s2)
-            if !ok:
-                print error
-    print time
-    print size
-
-    '''
+            temp = student("", "", ssn, "", "")
+            success = b.retrieve(temp)
+            if success is False:
+                print(f"Error: Item not in bag.\nCause: {ssn}\n")
+            else:
+                total_age += int(success.age)
+                students_retrieved += 1
+    avg_age = total_age/students_retrieved
+    t2 = time()
+    execution = t2-t1
+    print(f"Retrival took {execution:.2f} seconds.")
+    print(f"The average age was {avg_age:.4f} years old.\n")
 
 if __name__ == '__main__':
     main()

@@ -4,23 +4,28 @@ class bag():
         self.items = []
 
     def insert(self, data):
-        exists = self.exists(data)
-        if exists is False:
-            self.items.append(data)
-            return
-        return False
+        success = self.exists(data)
+        if success is not False:
+            return False
+        self.items.append(data)
 
     def delete(self, data):
-        exists = self.exists(data)
-        if exists is False:
+        success = self.exists(data)
+        if success is False:
             return False
-        self.items[exists] = self.items[-1]
+        self.items[success] = self.items[-1]
         self.items.pop()
 
     def exists(self, data):
         for i in range(len(self.items)):
             if self.items[i] == data:
                 return i
+        return False
+
+    def retrieve(self, data):
+        for item in self:
+            if item == data:
+                return item
         return False
 
     def size(self):

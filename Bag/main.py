@@ -1,9 +1,10 @@
+import bag
 from time import time
-from bag import bag
 from student import student
 
 def main():
-    b = bag()
+    #b = bag.bag_list()
+    b = bag.bag_linked_list()
 
     #Inserting
     t1 = time()

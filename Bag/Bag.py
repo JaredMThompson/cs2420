@@ -41,6 +41,7 @@ class bag_linked_list():
     
     def __init__(self):
         self.head = None
+        self.total = 0
     
     def insert(self, data):
         if self.exists(data):
@@ -48,18 +49,20 @@ class bag_linked_list():
         current = node(data)
         current.next = self.head
         self.head = current
+        self.total += 1
     
     def delete(self, data):
         if not self.exists(data):
             return False
         current = self.head
         prev = None
-        while current is not None:
+        while current:
             if current.data == data:
                 if prev is None:
                     self.head = current.next
                 else:
                     prev.next = current.next
+                self.total -= 1
                 break
             prev = current
             current = current.next
@@ -74,14 +77,11 @@ class bag_linked_list():
         return False
     
     def size(self):
-        total = 0
-        for node in self:
-            total += 1
-        return total
+        return self.total
     
     def __iter__(self):
         current = self.head
-        while current is not None:
+        while current:
             yield current.data
             current = current.next
 

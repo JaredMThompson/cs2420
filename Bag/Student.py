@@ -8,3 +8,9 @@ class student():
 
     def __eq__(self, value):
         return self.ssn == value.ssn
+
+    def __lt__(self, value):
+        return self.ssn < value.ssn
+
+    def __gt__(self, value):
+        return self.ssn > value.ssn

@@ -4,7 +4,8 @@ from student import student
 
 def main():
     #b = bag.bag_list()
-    b = bag.bag_linked_list()
+    #b = bag.bag_linked_list()
+    b = bag.bag_bst()
 
     #Inserting
     t1 = time()

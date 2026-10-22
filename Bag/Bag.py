@@ -24,10 +24,10 @@ class bag_list():
         return False
     
     def retrieve(self, data):
-        for item in self:
-            if item == data:
-                return item
-        return False
+        existence = self.exists(data)
+        if existence is False:
+            return False
+        return self.items[existence]
     
     def size(self):
         return len(self.items)
@@ -36,7 +36,8 @@ class bag_list():
         for item in self.items:
             yield item #kinda like return but does not end the process until it jumps out of the for loop and does nothing so i goes to what is next after the orginal call.
 
-    #you must override __eq__ for your data type for finding dupes
+
+#you must override __eq__ for your data type for finding dupes
 class bag_linked_list():
     
     def __init__(self):
@@ -90,3 +91,77 @@ class node():
     def __init__(self, data):
         self.data = data
         self.next = None
+
+
+#must overide your objects == > <
+class bag_bst():
+
+    def __init__(self):
+        self.head = None
+        self.item_count = 0
+
+    def insert (self, data):
+        if self.exists(data) is not False:
+            return False
+        self.item_count += 1
+        leaf_node = leaf(data)
+        parent = self.head
+        if parent is None:
+            self.head = leaf_node
+        else:
+            while True:
+                if data < parent.item:
+                    if parent.left is None:
+                        parent.left = leaf_node
+                        break
+                    parent = parent.left
+                else:
+                    if parent.right is None:
+                        parent.right = leaf_node
+                        break
+                    parent = parent.right
+
+    def delete(self, data):
+        pass
+
+    def exists(self, data):
+        if self.head is None:
+            return False
+        current = self.head
+        while True:
+            if data < current.item and current.left is not None:
+                current = current.left
+            elif data > current.item and current.right is not None:
+                current = current.right
+            else:
+                break
+        if data == current.item:
+            return current
+        return False
+
+    def retrieve(self, data):
+        location = self.exists(data)
+        if location is False:
+            return False
+        return location.item
+
+    def size(self):
+        return self.item_count
+
+    def __iter__(self):
+        if self.head is not None:
+            yield from self.recursive_iter(self.head)
+
+    def recursive_iter(self, leaf_node):
+        if leaf_node.left is not None:
+            yield from self.recursive_iter(leaf_node.left)
+        if leaf_node.right is not None:
+            yield from self.recursive_iter(leaf_node.right)
+        yield leaf_node.item
+
+class leaf():
+
+    def __init__(self, data):
+        self.item = data
+        self.left = None
+        self.right = None

@@ -125,18 +125,14 @@ class bag_bst():
         pass
 
     def exists(self, data):
-        if self.head is None:
-            return False
         current = self.head
-        while True:
-            if data < current.item and current.left is not None:
-                current = current.left
-            elif data > current.item and current.right is not None:
+        while current is not None:
+            if data == current.item:
+                return current
+            elif data > current.item:
                 current = current.right
             else:
-                break
-        if data == current.item:
-            return current
+                current = current.left
         return False
 
     def retrieve(self, data):

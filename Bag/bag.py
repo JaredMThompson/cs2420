@@ -143,17 +143,22 @@ class bag_bst():
 
     def size(self):
         return self.item_count
+        '''
+        count = 0
+        for item in self:
+            count += 1
+        return count
+        '''
 
     def __iter__(self):
         if self.head is not None:
             yield from self.recursive_iter(self.head)
 
     def recursive_iter(self, leaf_node):
-        if leaf_node.left is not None:
+        if leaf_node is not None:
             yield from self.recursive_iter(leaf_node.left)
-        if leaf_node.right is not None:
+            yield leaf_node.item
             yield from self.recursive_iter(leaf_node.right)
-        yield leaf_node.item
 
 class leaf():
 

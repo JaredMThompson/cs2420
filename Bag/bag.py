@@ -122,13 +122,35 @@ class bag_bst():
                     parent = parent.right
 
     def delete(self, data):
-        pass
+        if not self.exists(data):
+            return False
+        self.head = self.recursive_delete(data, self.head)
+        self.item_count -= 1
+        return True
+
+    def recursive_delete(self, data, c):
+        if data < c.item:
+            c.left = self.recursive_delete(data, c.left)
+        elif data > c.item:
+            c.right = self.recursive_delete(data, c.right)
+        else:
+            if not c.left:
+                c = c.right
+            elif not c.right:
+                c = c.left
+            else:
+                parent = c.left
+                while parent.right:
+                    parent = parent.right
+                c.item = parent.item
+                c.left = self.recursive_delete(parent.item, c.left)
+        return c
 
     def exists(self, data):
         current = self.head
         while current is not None:
             if data == current.item:
-                return current
+                return True
             elif data > current.item:
                 current = current.right
             else:
@@ -136,10 +158,15 @@ class bag_bst():
         return False
 
     def retrieve(self, data):
-        location = self.exists(data)
-        if location is False:
-            return False
-        return location.item
+        current = self.head
+        while current is not None:
+            if data == current.item:
+                return current.item
+            elif data > current.item:
+                current = current.right
+            else:
+                current = current.left
+        return False
 
     def size(self):
         return self.item_count

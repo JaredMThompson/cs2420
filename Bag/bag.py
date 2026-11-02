@@ -139,11 +139,11 @@ class bag_bst():
             elif not c.right:
                 c = c.left
             else:
-                parent = c.left
-                while parent.right:
-                    parent = parent.right
-                c.item = parent.item
-                c.left = self.recursive_delete(parent.item, c.left)
+                predecessor = c.left
+                while predecessor.right:
+                    predecessor = predecessor.right
+                c.item = predecessor.item
+                c.left = self.recursive_delete(predecessor.item, c.left)
         return c
 
     def exists(self, data):

@@ -103,7 +103,7 @@ class bag_bst():
         self.item_count = 0
 
     def insert (self, data):
-        if self.exists(data) is not False:
+        if self.exists(data):
             return False
         self.item_count += 1
         leaf_node = leaf(data)

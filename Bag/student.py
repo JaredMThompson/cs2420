@@ -14,3 +14,6 @@ class student():
 
     def __gt__(self, value):
         return self.ssn > value.ssn
+
+    def __hash__(self):
+        return int(self.ssn.replace('-', ''))

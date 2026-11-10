@@ -1,3 +1,5 @@
+from prime import is_prime
+
 #you must override __eq__ for your data type for finding dupes
 class bag_list():
     
@@ -193,3 +195,107 @@ class leaf():
         self.item = data
         self.left = None
         self.right = None
+
+#override you hash and comparisons
+class bag_hash():
+    def __init__(self, init_table_size = 3):
+        if init_table_size%2 == 0:
+            init_table_size += 1
+        while not is_prime(init_table_size):
+            init_table_size += 2
+        self.table_size = init_table_size
+        self.hash_table = [None] * self.table_size
+        self.total = 0
+        self.total_active = 0
+
+    def insert(self, data):
+        #could be faster if the exists check was in the func rather than a seperate func making us do roughly twice
+        #the work but it is fairly cheap with our data and this is more readable so it wins
+        if self.exists(data):
+            return False
+        location = hash(data)%self.table_size
+        current = self.hash_table[location]
+        location_offset = 0
+        while current is not None and current is not False:
+            location_offset += 1
+            current = self.hash_table[(location + location_offset)%self.table_size]
+        if current is None:
+            self.total += 1
+        self.total_active += 1
+        self.hash_table[(location + location_offset)%self.table_size] = data
+        self.resize_check()
+
+    def delete(self, data):
+        #in this case I do not use exists because it is still really easy to read,
+        #when checking if it exists if it does just replace it instead of doing it again
+        location = hash(data)%self.table_size
+        current = self.hash_table[location]
+        location_offset = 0
+        while current is not None:
+            if current is not False and current == data: #handle edge case of compairing a bool with the item causing an error
+                self.hash_table[(location + location_offset)%self.table_size] = False
+                self.total_active -= 1
+                return True
+            location_offset += 1
+            current = self.hash_table[(location + location_offset)%self.table_size]
+        return False
+
+    def exists(self, data):
+        location = hash(data)%self.table_size
+        current = self.hash_table[location]
+        location_offset = 0
+        while current is not None:
+            if current is not False and current == data:
+                return True
+            location_offset += 1
+            current = self.hash_table[(location + location_offset)%self.table_size]
+        return False
+
+    def retrieve(self, data):
+        #once again better to just do the work then call exists to do it twice, honestly exists seems fairly useless in most of these bags unless you want/need more clarity
+        location = hash(data)%self.table_size
+        current = self.hash_table[location]
+        location_offset = 0
+        while current is not None:
+            if current is not False and current == data:
+                return current
+            location_offset += 1
+            current = self.hash_table[(location + location_offset)%self.table_size]
+        return False
+
+    def size(self):
+        return self.total_active
+
+    def __iter__(self):
+        for i in range(self.table_size):
+            if self.hash_table[i] is not None and self.hash_table[i] is not False:
+                yield self.hash_table[i]
+
+    #dynmaic resize
+    def resize_check(self):
+        if (self.total_active/self.total) < 0.5: #if data is > %50 garbage clean the garbage
+            self.total = self.total_active
+            self.new_table(self.table_size)
+
+        elif (self.total/self.table_size) >= 0.7: #if data is >= %70 of table double table size and garbage gets cleaned
+            self.total = self.total_active
+            new_table_size = (self.table_size * 2) + 1
+            while not is_prime(new_table_size):
+                new_table_size += 2
+            self.new_table(new_table_size)
+
+        elif (self.total/self.table_size) <= 0.3: #if data is <= %30 of table half table size and garbage gest cleaned
+            self.total = self.total_active
+            new_table_size = (self.table_size // 2) + 1
+            while not is_prime(new_table_size):
+                new_table_size += 2
+            self.new_table(new_table_size)
+
+    def new_table(self, table_size):
+        old_list = []
+        for item in self:
+            old_list.append(item)
+        self.table_size = table_size
+        self.hash_table = [None] * table_size
+        for item in old_list:
+            self.insert(item)

@@ -5,7 +5,8 @@ from student import student
 def main():
     #b = bag.bag_list()
     #b = bag.bag_linked_list()
-    b = bag.bag_bst()
+    #b = bag.bag_bst()
+    b = bag.bag_hash()
 
     #Inserting
     t1 = time()
@@ -20,7 +21,7 @@ def main():
     execution = t2-t1
     print(f"Inserting took {execution:.2f} seconds.")
     print(f"The size of the bag is {b.size()} items.\n")
-    
+ 
     #Traversal/Iteration
     t1 = time()
     total_age = 0
@@ -31,7 +32,7 @@ def main():
     execution = t2-t1
     print(f"Traversal/Iteration took {execution:.2f} seconds.")
     print(f"The average age was {avg_age:.4f} years old.\n")
-
+    
     #Deletion
     t1 = time()
     with open ("DeleteNames.txt", "r") as file:

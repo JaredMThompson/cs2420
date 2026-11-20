@@ -7,10 +7,10 @@ def main():
     #b = bag.bag_linked_list()
     #b = bag.bag_bst()
     b = bag.bag_hash()
-
+    print("hash medium")
     #Inserting
     t1 = time()
-    with open ("FakeNames.txt", "r") as file:
+    with open ("FakeNamesMedium.txt", "r") as file:
         for line in file:
             student_info = line.split()
             s = student(student_info[0], student_info[1], student_info[2], student_info[3], student_info[4])
@@ -35,7 +35,7 @@ def main():
     
     #Deletion
     t1 = time()
-    with open ("DeleteNames.txt", "r") as file:
+    with open ("DeleteNamesMedium.txt", "r") as file:
         for line in file:
             ssn = line.strip()
             temp = student("", "", ssn, "", "")
@@ -51,7 +51,7 @@ def main():
     t1 = time()
     total_age = 0
     students_retrieved = 0
-    with open ("RetrieveNames.txt", "r") as file:
+    with open ("RetrieveNamesMedium.txt", "r") as file:
         for line in file:
             ssn = line.strip()
             temp = student("", "", ssn, "", "")

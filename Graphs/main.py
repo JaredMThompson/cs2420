@@ -4,16 +4,18 @@ import csv
 def main():
     with open("graph_input.csv", mode="r", newline="") as file:
         reader = csv.reader(file)
-        current = 0
-        edges = 0
-        for row in reader:
-            current += 1
-            if current == 1:
-                graph = Graph(int(row[0]))
-            elif current == 2:
-                edges = int(row[0])
-            else:
-                
+        vertices = int(next(reader)[0])
+        graph = Graph(vertices)
+        edges = int(next(reader)[0])
+        for i in range(edges):
+            edge = next(reader)
+            graph.add_edge(int(edge[0]), int(edge[1]))
+        tests = int(next(reader)[0])
+        for i in range(tests):
+            test = next(reader)
+            path = graph.find_shortest_path(int(test[0]), int(test[1]))
+            print(f'From {test[0]} to {test[-1]}: {path}')
+        
 
 
 if __name__ == '__main__':
